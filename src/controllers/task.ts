@@ -1,14 +1,22 @@
-import {Application, Request,Response,NextFunction} from "express";
-import session from "express-session";
+import express,{Application, Request,Response,NextFunction} from "express";
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const app = express();
+app.use(cookieParser());
+app.use(session({
+    secret: "amar",
+    saveUninitialized: true,
+    resave: true
+}));
 const dbConn = require("../db/db");
 
 const insert = async function insert(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
 
-    const created_by = await req.body.created_by;
+    const created_by = session.id;
     const task = await req.body.task;
     const time = await req.body.time;
-    
+
     const sqlcheck = "select * from module WHERE task=? AND time=?";
     
     dbConn.query(sqlcheck,[task,time],function(error:any, result:any){
@@ -29,7 +37,7 @@ const insert = async function insert(req:Request,res:Response,next:NextFunction)
 
 const fetch = async function fetch(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    const created_by = await req.body.created_by;
+    const created_by = session.id;
 
     const sql = "select * from module WHERE created_by=?";
     
@@ -41,7 +49,7 @@ const fetch = async function fetch(req:Request,res:Response,next:NextFunction){
 
 const fetched = async function fetched(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    const created_by = await req.body.created_by;
+    const created_by = session.id;
     const id = req.params.id;
     
     const sql = "select * from module WHERE id=? AND created_by=?";
@@ -54,7 +62,7 @@ const fetched = async function fetched(req:Request,res:Response,next:NextFunctio
 
 const edit = async function edit(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    const created_by = await req.body.created_by;
+    const created_by = session.id;
     const sql = "UPDATE module SET task=?,time=? WHERE id=? AND created_by=? ";
     
     const task = await req.body.task;
@@ -71,7 +79,7 @@ const remove = async function remove(req:Request,res:Response,next:NextFunction)
     //let data = sumData(12,24);
     const sql = "delete from module where id=? AND created_by=?";
     
-    const created_by = await req.body.created_by;
+    const created_by = session.id;
     const id = await req.body.id; 
     
     dbConn.query(sql,[id,created_by],function(error:any, result:any){

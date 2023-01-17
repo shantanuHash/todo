@@ -7,12 +7,15 @@ const {genSaltSync, hashSync ,compareSync} = require("bcrypt");
 //const secret = 'secretkey';
 
 const app = express();
-var session  = require('express-session');
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
 app.use(session({
-    secret: 'secret',
-    resave:false,
-    saveUninitialized:true
-}))
+    secret: "amar",
+    saveUninitialized: true,
+    resave: true
+}));
 
 const signup = function(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
@@ -61,8 +64,9 @@ const login = function(req:Request,res:Response,next:NextFunction){
                     name:result[0].name,
                     email:result[0].email
                 }
-                //req.session.email=result[0].email;
-                //req.session.id = result[0].id;
+                session.email=result[0].email;
+                session.id = result[0].id;
+                session.username = result[0].name;
                 const jsontoken = sign({result:user}, "secretkey" , { expiresIn: "300s" });
                 return res.json({
                     success:1,
