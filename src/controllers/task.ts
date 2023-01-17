@@ -5,6 +5,7 @@ const dbConn = require("../db/db");
 const insert = async function insert(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
 
+    const created_by = await req.body.created_by;
     const task = await req.body.task;
     const time = await req.body.time;
     
@@ -15,9 +16,9 @@ const insert = async function insert(req:Request,res:Response,next:NextFunction)
         if (result.length!=0) {
             res.send("Data Exists");
         } else {
-            const sql = "insert into module(task, time) values(?, ?)";
+            const sql = "insert into module(task, time, created_by) values(?, ?, ?)";
     
-            dbConn.query(sql, [task,time],function(error:any, result:any){
+            dbConn.query(sql, [task,time,created_by],function(error:any, result:any){
                 if(error) throw error;
                 res.send("data inserted successfully"+result.insertId);
             });
@@ -26,49 +27,54 @@ const insert = async function insert(req:Request,res:Response,next:NextFunction)
     });
 };
 
-const fetch = function(req:Request,res:Response,next:NextFunction){
+const fetch = async function fetch(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
+    const created_by = await req.body.created_by;
+
+    const sql = "select * from module WHERE created_by=?";
     
-    const sql = "select * from module";
-    
-    dbConn.query(sql,function(error:any, result:any){
+    dbConn.query(sql,[created_by],function(error:any, result:any){
         if(error) throw error;
         res.send(result);
     });
 };
 
-const fetched = function(req:Request,res:Response,next:NextFunction){
+const fetched = async function fetched(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
+    const created_by = await req.body.created_by;
     const id = req.params.id;
-    const sql = "select * from module WHERE id=?";
     
-    dbConn.query(sql,[id],function(error:any, result:any){
+    const sql = "select * from module WHERE id=? AND created_by=?";
+    
+    dbConn.query(sql,[id,created_by],function(error:any, result:any){
         if(error) throw error;
         res.send(result);
     });
 };
 
-const edit = function(req:Request,res:Response,next:NextFunction){
+const edit = async function edit(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    const sql = "UPDATE module SET task=?,time=? WHERE id=? ";
+    const created_by = await req.body.created_by;
+    const sql = "UPDATE module SET task=?,time=? WHERE id=? AND created_by=? ";
     
-    const task = req.body.task;
-    const time = req.body.time;
-    const id = req.body.id;
+    const task = await req.body.task;
+    const time = await req.body.time;
+    const id = await req.body.id;
     
-    dbConn.query(sql,[task,time,id],function(error:any, result:any){
+    dbConn.query(sql,[task,time,id,created_by],function(error:any, result:any){
         if(error) throw error;
         res.send("data updated successfully");
     });
 };
 
-const remove = function(req:Request,res:Response,next:NextFunction){
+const remove = async function remove(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    const sql = "delete from module where id=?";
-
-        const id = req.body.id; 
+    const sql = "delete from module where id=? AND created_by=?";
     
-    dbConn.query(sql,[id],function(error:any, result:any){
+    const created_by = await req.body.created_by;
+    const id = await req.body.id; 
+    
+    dbConn.query(sql,[id,created_by],function(error:any, result:any){
         if(error) throw error;
         res.send("data Deleted successfully");
     });

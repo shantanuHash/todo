@@ -66,6 +66,7 @@ const login = function(req:Request,res:Response,next:NextFunction){
                 const jsontoken = sign({result:user}, "secretkey" , { expiresIn: "300s" });
                 return res.json({
                     success:1,
+                    id: result[0].id,
                     message: "login successfully",
                     token:jsontoken
                 });
