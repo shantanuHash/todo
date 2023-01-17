@@ -1,12 +1,13 @@
 import {Application, Request,Response,NextFunction} from "express";
+import session from "express-session";
 const dbConn = require("../db/db");
 
-const insert = function(req:Request,res:Response,next:NextFunction){
+const insert = async function insert(req:Request,res:Response,next:NextFunction){
     //let data = sumData(12,24);
-    
-    const task = req.body.task;
-    const time = req.body.time;
 
+    const task = await req.body.task;
+    const time = await req.body.time;
+    
     const sqlcheck = "select * from module WHERE task=? AND time=?";
     
     dbConn.query(sqlcheck,[task,time],function(error:any, result:any){
@@ -21,6 +22,7 @@ const insert = function(req:Request,res:Response,next:NextFunction){
                 res.send("data inserted successfully"+result.insertId);
             });
         }
+        console.log(session);
     });
 };
 
