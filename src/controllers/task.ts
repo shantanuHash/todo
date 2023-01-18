@@ -28,7 +28,7 @@ const insert = async function insert(req:Request,res:Response,next:NextFunction)
     
             dbConn.query(sql, [task,time,created_by],function(error:any, result:any){
                 if(error) throw error;
-                res.send("data inserted successfully"+result.insertId);
+                res.send("Data inserted successfully"+result.insertId);
             });
         }
         console.log(session);
@@ -71,7 +71,7 @@ const edit = async function edit(req:Request,res:Response,next:NextFunction){
     
     dbConn.query(sql,[task,time,id,created_by],function(error:any, result:any){
         if(error) throw error;
-        res.send("data updated successfully");
+        res.send("Data updated successfully");
     });
 };
 
@@ -84,7 +84,7 @@ const remove = async function remove(req:Request,res:Response,next:NextFunction)
     
     dbConn.query(sql,[id,created_by],function(error:any, result:any){
         if(error) throw error;
-        res.send("data Deleted successfully");
+        res.send("Data Deleted successfully");
     });
 };
 

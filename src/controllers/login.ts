@@ -70,7 +70,6 @@ const login = function(req:Request,res:Response,next:NextFunction){
                 const jsontoken = sign({result:user}, "secretkey" , { expiresIn: "300s" });
                 return res.json({
                     success:1,
-                    id: result[0].id,
                     message: "login successfully",
                     token:jsontoken
                 });
@@ -91,7 +90,21 @@ const login = function(req:Request,res:Response,next:NextFunction){
     });
 };
 
+const logout = function(req:Request,res:Response)
+{    
+    req.session.destroy(function(error:any){
+        if (error) {
+            console.log(error)
+        }
+        return res.json({
+            success:1,
+            message: "Logout successfully"
+        });
+    });
+};
+
 export{
     signup,
-    login
+    login,
+    logout
 }
