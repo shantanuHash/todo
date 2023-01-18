@@ -6,6 +6,7 @@ import {check_token} from '../auth/token_validation';
 
 import {signup} from '../controllers/login';
 import {login} from '../controllers/login';
+import {logout} from '../controllers/login';
 
 import {dashboard} from '../controllers/dashboard';
 
@@ -19,6 +20,7 @@ const router = express.Router();
 
 router.post('/signup',signup);
 router.post('/login',login);
+router.get('/logout',logout);
 
 router.get('/dashboard',dashboard);
 
