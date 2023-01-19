@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2023 at 07:15 AM
+-- Generation Time: Jan 19, 2023 at 11:21 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -32,7 +32,7 @@ CREATE TABLE `module` (
   `task` varchar(20) NOT NULL,
   `time` time NOT NULL,
   `created_by` int(11) NOT NULL,
-  `created_date` date NOT NULL
+  `created_date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -65,7 +65,11 @@ INSERT INTO `module` (`id`, `task`, `time`, `created_by`, `created_date`) VALUES
 (39, 'drive', '08:30:00', 7, '0000-00-00'),
 (40, 'ride', '10:20:00', 8, '0000-00-00'),
 (41, 'deep sleep', '04:00:00', 8, '0000-00-00'),
-(42, 'light sleep', '04:00:00', 8, '0000-00-00');
+(42, 'light sleep', '04:00:00', 8, '0000-00-00'),
+(43, 'Drink', '10:00:00', 0, '0000-00-00'),
+(44, 'horse', '02:30:00', 8, '0000-00-00'),
+(45, 'horse riding', '02:45:00', 8, '2023-01-19'),
+(46, 'horse riding', '02:45:00', 9, '2023-01-19');
 
 -- --------------------------------------------------------
 
@@ -81,6 +85,8 @@ CREATE TABLE `users` (
   `email` varchar(60) NOT NULL,
   `user_type` varchar(10) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `session_status` enum('0','1') NOT NULL,
+  `session_time` datetime NOT NULL DEFAULT current_timestamp(),
   `created_date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -88,15 +94,16 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `name`, `gender`, `email`, `user_type`, `password`, `created_date`) VALUES
-(1, 'yssyogesh', 'Yogesh singh', 'male', 'yssyogesh@makitweb.com', '', '', '2023-01-16'),
-(2, 'sonarika', 'Sonarika Bhadoria', 'female', 'bsonarika@gmail.com', '', '', '2023-01-16'),
-(3, 'vishal', 'Vishal sahu', 'male', 'vishal@yahoo.com', '', '', '2023-01-16'),
-(4, 'sunil', 'sunil', 'male', 'sunil521@gmail.com', '', '', '2023-01-16'),
-(5, 'shantanupalecha', 'shantanu', 'male', 'shantanu@gmail.com', 'Admin', '123456', '2023-01-16'),
-(6, 'palecha', 'pal', 'M', 'palecha@gmail.com', 'User', '$2b$10$eDDKoVXFJchPsKtegY8XOuXgqam8M7URLLfKwnWjXAIlcsf0lTp9O', '2023-01-17'),
-(7, 'shantanupalecha', 'shantanu', 'male', 'smtp@gmail.com', 'Admin', '$2b$10$09tRYgAc3i8mHDxaE0uB/uJMIVPgQRjtLl2Oealpx8IY9CChkasQC', '2023-01-17'),
-(8, 'shantanupalecha', 'admin', 'male', 'shantanup@gmail.com', 'Admin', '$2b$10$1eD9TP0dl95ThJmuZyMVH.h01lznZdWEJdBByu97eGmI/UHMZG/3C', '2023-01-17');
+INSERT INTO `users` (`id`, `username`, `name`, `gender`, `email`, `user_type`, `password`, `session_status`, `session_time`, `created_date`) VALUES
+(1, 'yssyogesh', 'Yogesh singh', 'male', 'yssyogesh@makitweb.com', '', '', '0', '2023-01-19 14:04:43', '2023-01-16'),
+(2, 'sonarika', 'Sonarika Bhadoria', 'female', 'bsonarika@gmail.com', '', '', '0', '2023-01-19 14:04:43', '2023-01-16'),
+(3, 'vishal', 'Vishal sahu', 'male', 'vishal@yahoo.com', '', '', '0', '2023-01-19 14:04:43', '2023-01-16'),
+(4, 'sunil', 'sunil', 'male', 'sunil521@gmail.com', '', '', '0', '2023-01-19 14:04:43', '2023-01-16'),
+(5, 'shantanupalecha', 'shantanu', 'male', 'shantanu@gmail.com', 'Admin', '123456', '0', '2023-01-19 14:04:43', '2023-01-16'),
+(6, 'palecha', 'pal', 'M', 'palecha@gmail.com', 'User', '$2b$10$eDDKoVXFJchPsKtegY8XOuXgqam8M7URLLfKwnWjXAIlcsf0lTp9O', '0', '2023-01-19 14:04:43', '2023-01-17'),
+(7, 'shantanupalecha', 'shantanu', 'male', 'smtp@gmail.com', 'Admin', '$2b$10$09tRYgAc3i8mHDxaE0uB/uJMIVPgQRjtLl2Oealpx8IY9CChkasQC', '0', '2023-01-19 14:04:43', '2023-01-17'),
+(8, 'shantanupalecha', 'admin', 'male', 'shantanup@gmail.com', 'Admin', '$2b$10$1eD9TP0dl95ThJmuZyMVH.h01lznZdWEJdBByu97eGmI/UHMZG/3C', '1', '2023-01-19 14:42:34', '2023-01-17'),
+(9, 'palecha', 'palecha', 'male', 'shantanup1@gmail.com', 'Admin', '$2b$10$Wguw7srPAL/33Gy6NOJUG.v.m4Eg42U.Fo4k30hb67wSiTadWBdLK', '1', '2023-01-19 15:05:43', '2023-01-19');
 
 --
 -- Indexes for dumped tables
@@ -122,13 +129,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `module`
 --
 ALTER TABLE `module`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
